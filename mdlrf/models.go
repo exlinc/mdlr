@@ -95,7 +95,7 @@ func (mf *MdlrFile) Load(absFilePath string) error {
 		return err
 	}
 	mf.Prepare(absFilePath)
-	return nil
+	return mf.Validate()
 }
 
 func (mf *MdlrFile) Prepare(absFilePath string) {
