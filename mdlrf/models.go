@@ -62,6 +62,16 @@ func (mod *Module) Prepare(name string, parentDir string) {
 	if mod.Type == "" {
 		mod.Type = "git"
 	}
+	// Try to set defaults based on the type of the module
+	switch mod.Type {
+	case "git":
+		if mod.Branch == "" {
+			mod.Branch = "master"
+		}
+		if mod.Commit == "" {
+			mod.Commit = "HEAD"
+		}
+	}
 	mod.AbsolutePath = mod.Path
 	if !filepath.IsAbs(mod.AbsolutePath) {
 		mod.AbsolutePath = filepath.Join(parentDir, mod.AbsolutePath)
