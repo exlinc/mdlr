@@ -13,4 +13,5 @@ var (
 	ErrInvalidModuleType       = errors.New("error invalid module type. must be either git or hg")
 	ErrModuleNameAlreadyInUse  = errors.New("error the module name is already used in the same mdlr.yml file")
 	ErrModuleNameNotExist      = errors.New("error the module name does not exist in the mdlr.yml file")
+	ErrNoModules               = errors.New("error no modules are defined in the mdlr.yml file")
 )

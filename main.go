@@ -28,7 +28,7 @@ var (
 	updateForce    = updateCmd.Flag("force", "Wipe database and reset tables first").Short('f').Bool()
 	updateSpecific = updateCmd.Flag("specific", "Specify the name of the module to update").Short('s').String()
 	statusCmd      = kingpin.Command("status", "Get the detailed status of the mdlr.yml module")
-	statusName = statusCmd.Flag("name", "Specify the name of the module to get the status of").Short('n').Required().String()
+	statusName     = statusCmd.Flag("name", "Specify the name of the module to get the status of").Short('n').Required().String()
 )
 
 func main() {
@@ -69,9 +69,19 @@ func main() {
 		log.Info("Successfully removed module from the mdlr.yml file")
 		log.Exit(0)
 	case "import":
-		// todo
+		err = c.Import(*importSpecific, *importForce)
+		if err != nil {
+			log.WithError(err).Fatal("Unable to import module(s) from the mdlr.yml file")
+		}
+		log.Info("Successfully imported module(s) from the mdlr.yml file")
+		log.Exit(0)
 	case "update":
-		// todo
+		err = c.Update(*updateSpecific, *updateForce)
+		if err != nil {
+			log.WithError(err).Fatal("Unable to update module(s) from the mdlr.yml file")
+		}
+		log.Info("Successfully updated module(s) from the mdlr.yml file")
+		log.Exit(0)
 	case "status":
 		out, err := c.Status(*statusName)
 		if err != nil {

@@ -95,6 +95,9 @@ func (ctx *MdlrCtx) Remove(name string, dropFiles bool) error {
 	if err != nil {
 		return err
 	}
+	if len(ctx.MdlrFile.Modules) == 0 {
+		return ErrNoModules
+	}
 	if _, exist := ctx.MdlrFile.Modules[name]; !exist {
 		return ErrModuleNameNotExist
 	}
@@ -106,13 +109,45 @@ func (ctx *MdlrCtx) Remove(name string, dropFiles bool) error {
 	return nil
 }
 
-func (ctx *MdlrCtx) Import() error {
+func (ctx *MdlrCtx) Import(specificName string, force bool) error {
 	// TODO
+	err := ctx.loadFile()
+	if err != nil {
+		return err
+	}
+	if len(ctx.MdlrFile.Modules) == 0 {
+		return ErrNoModules
+	}
+	switch specificName {
+	case "":
+		// TODO
+	default:
+		if _, exist := ctx.MdlrFile.Modules[specificName]; !exist {
+			return ErrModuleNameNotExist
+		}
+		// TODO
+	}
 	return nil
 }
 
-func (ctx *MdlrCtx) Update() error {
+func (ctx *MdlrCtx) Update(specificName string, force bool) error {
 	// TODO
+	err := ctx.loadFile()
+	if err != nil {
+		return err
+	}
+	if len(ctx.MdlrFile.Modules) == 0 {
+		return ErrNoModules
+	}
+	switch specificName {
+	case "":
+		// TODO
+	default:
+		if _, exist := ctx.MdlrFile.Modules[specificName]; !exist {
+			return ErrModuleNameNotExist
+		}
+		// TODO
+	}
 	return nil
 }
 
@@ -120,6 +155,9 @@ func (ctx *MdlrCtx) Status(name string) (string, error) {
 	err := ctx.loadFile()
 	if err != nil {
 		return "", err
+	}
+	if len(ctx.MdlrFile.Modules) == 0 {
+		return "", ErrNoModules
 	}
 	if _, exist := ctx.MdlrFile.Modules[name]; !exist {
 		return "", ErrModuleNameNotExist
