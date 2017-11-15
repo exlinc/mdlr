@@ -23,6 +23,6 @@ func Load(verbose bool, vcsType string, root string) (Context, error) {
 type Context interface {
 	Import() error
 	Update() error
-	Status() string
+	Status(short bool) string
 	Invokable() (bool, error)
 }

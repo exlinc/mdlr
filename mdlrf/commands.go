@@ -58,7 +58,7 @@ func (ctx *MdlrCtx) List() (string, error) {
 	}
 	items := make([]string, 0, len(ctx.MdlrFile.Modules))
 	for _, m := range ctx.MdlrFile.Modules {
-		items = append(items, fmt.Sprintf("[%s] %s -> %s (%s) hosted at %s on branch %s at %s", m.Status(), m.Path, m.Name, m.Type, m.URL, m.Branch, m.Commit))
+		items = append(items, fmt.Sprintf("[%s] %s -> %s (%s) hosted at %s on branch %s at %s", m.Status(true), m.Path, m.Name, m.Type, m.URL, m.Branch, m.Commit))
 	}
 	out := fmt.Sprintf("Modules count: %d", len(items))
 	for _, val := range items {
@@ -116,7 +116,13 @@ func (ctx *MdlrCtx) Update() error {
 	return nil
 }
 
-func (ctx *MdlrCtx) Status() error {
-	// TODO
-	return nil
+func (ctx *MdlrCtx) Status(name string) (string, error) {
+	err := ctx.loadFile()
+	if err != nil {
+		return "", err
+	}
+	if _, exist := ctx.MdlrFile.Modules[name]; !exist {
+		return "", ErrModuleNameNotExist
+	}
+	return ctx.MdlrFile.Modules[name].Status(false), nil
 }

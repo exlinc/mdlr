@@ -27,8 +27,8 @@ var (
 	updateCmd      = kingpin.Command("update", "Update the mdlr.yml modules. Use the --specific flag to specify a single module by name")
 	updateForce    = updateCmd.Flag("force", "Wipe database and reset tables first").Short('f').Bool()
 	updateSpecific = updateCmd.Flag("specific", "Specify the name of the module to update").Short('s').String()
-	statusCmd      = kingpin.Command("status", "Get the status of the mdlr.yml modules. Use the --specific flag to specify a single module by name")
-	statusSpecific = statusCmd.Flag("specific", "Specify the name of the module to update").Short('s').String()
+	statusCmd      = kingpin.Command("status", "Get the detailed status of the mdlr.yml module")
+	statusName = statusCmd.Flag("name", "Specify the name of the module to get the status of").Short('n').Required().String()
 )
 
 func main() {
@@ -73,7 +73,12 @@ func main() {
 	case "update":
 		// todo
 	case "status":
-		// todo
+		out, err := c.Status(*statusName)
+		if err != nil {
+			log.WithError(err).Fatal("Unable to get the status of the module from the mdlr.yml file")
+		}
+		log.Info(out)
+		log.Exit(0)
 	default:
 		log.Error("Unknown command")
 	}

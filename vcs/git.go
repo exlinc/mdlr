@@ -49,15 +49,28 @@ func (ctx *GitVCSCtx) Update() error {
 	return nil
 }
 
-func (ctx *GitVCSCtx) Status() string {
+func (ctx *GitVCSCtx) Status(short bool) string {
 	// TODO - get branch, commit, modified files, etc.
-	if !ctx.rootExists() {
-		return "NONE"
+	switch short {
+	case true:
+		if !ctx.rootExists() {
+			return "NONE"
+		}
+		if out, err := ctx.runCmdInRoot("status"); strings.HasPrefix(out, "fatal:") || err != nil {
+			return "INVALID"
+		}
+		return "IMPORTED"
+	default:
+		if !ctx.rootExists() {
+			return "The path of the module does not yet exist. Import it to get setup"
+		}
+		if out, err := ctx.runCmdInRoot("status"); strings.HasPrefix(out, "fatal:") || err != nil {
+			return "The module is not currently setup or is setup incorrectly. Import it to get setup"
+		} else {
+			return out
+		}
 	}
-	if out, err := ctx.runCmdInRoot("status"); strings.HasPrefix(out, "fatal:") || err != nil {
-		return "INVALID"
-	}
-	return "IMPORTED"
+
 }
 
 func (ctx *GitVCSCtx) Invokable() (bool, error) {
