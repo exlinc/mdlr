@@ -1,5 +1,10 @@
 package mdlrf
 
+import (
+	"fmt"
+	"os"
+)
+
 type MdlrCtx struct {
 	IsFileReady bool
 	FilePath    string
@@ -37,23 +42,67 @@ func (ctx *MdlrCtx) Init() error {
 		return err
 	}
 	ctx.MdlrFile = NewMdlrFile()
+	ctx.MdlrFile.Prepare(ctx.FilePath)
 	ctx.IsFileReady = true
-	ctx.MdlrFile.Persist(ctx.FilePath)
-	return nil
+	return ctx.MdlrFile.Persist()
 }
 
-func (ctx *MdlrCtx) List() error {
+func (ctx *MdlrCtx) List() (string, error) {
 	// TODO
-	return nil
+	err := ctx.loadFile()
+	if err != nil {
+		return "", err
+	}
+	if len(ctx.MdlrFile.Modules) == 0 {
+		return "There aren't any modules defined in the mdlr.yml file yet. Try running the add command with mdlr to add a module.", nil
+	}
+	items := make([]string, 0, len(ctx.MdlrFile.Modules))
+	for _, m := range ctx.MdlrFile.Modules {
+		items = append(items, fmt.Sprintf("[%s] %s -> %s (%s) hosted at %s on branch %s#%s", m.Status(), m.Path, m.Name, m.Type, m.URL, m.Branch, m.Commit))
+	}
+	out := fmt.Sprintf("Modules count: %d", len(items))
+	for _, val := range items {
+		out += fmt.Sprintf("\n\t%s", val)
+	}
+	return out, nil
 }
 
-func (ctx *MdlrCtx) Add() error {
-	// TODO
-	return nil
+func (ctx *MdlrCtx) Add(name string, mType string, path string, url string, branch string, commit string) error {
+	err := ctx.loadFile()
+	if err != nil {
+		return err
+	}
+	if _, exist := ctx.MdlrFile.Modules[name]; exist {
+		return ErrModuleNameAlreadyInUse
+	}
+	ctx.MdlrFile.Modules[name] = &Module{
+		Type:   mType,
+		Path:   path,
+		URL:    url,
+		Branch: branch,
+		Commit: commit,
+	}
+	ctx.MdlrFile.Modules[name].Prepare(name, ctx.MdlrFile.ParentDirectory)
+	err = ctx.MdlrFile.Modules[name].Validate()
+	if err != nil {
+		return err
+	}
+	return ctx.MdlrFile.Persist()
 }
 
-func (ctx *MdlrCtx) Remove() error {
-	// TODO
+func (ctx *MdlrCtx) Remove(name string, dropFiles bool) error {
+	err := ctx.loadFile()
+	if err != nil {
+		return err
+	}
+	if _, exist := ctx.MdlrFile.Modules[name]; !exist {
+		return ErrModuleNameNotExist
+	}
+	dirPath := ctx.MdlrFile.Modules[name].AbsolutePath
+	delete(ctx.MdlrFile.Modules, name)
+	if dropFiles {
+		return os.RemoveAll(dirPath)
+	}
 	return nil
 }
 

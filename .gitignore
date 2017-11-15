@@ -46,4 +46,4 @@ nohup.out
 .DS_Store
 *.csv
 *.zip
-./mdlr.yml
+mdlr.yml

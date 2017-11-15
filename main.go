@@ -6,6 +6,8 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
+// TODO: Add 'commit' command that would commit the branch/commit of the module to mdlr.yml
+// TODO: Add command to delete/reset/revert the module
 var (
 	initCmd        = kingpin.Command("init", "Create a template mdlr.yml file in the directory")
 	listCmd        = kingpin.Command("list", "List the current modules from the mdlr.yml file in the directory")
@@ -14,7 +16,7 @@ var (
 	addType        = addCmd.Flag("type", "The module type -- defaults to git").Short('t').Default("git").String()
 	addPath        = addCmd.Flag("path", "Path for the module within the project").Required().Short('p').String()
 	addUrl         = addCmd.Flag("url", "URL for the module").Required().Short('u').String()
-	addBranch      = addCmd.Flag("branch", "Name of the branch of the repo to use").Default("master").Short('b').String()
+	addBranch      = addCmd.Flag("branch", "Name of the branch of the repo to use").Short('b').String()
 	addCommit      = addCmd.Flag("commit", "Long or short hash of the commit of the module to use").Short('c').String()
 	removeCmd      = kingpin.Command("remove", "Remove the module from the mdlr.yml file. Use the --files flag to remove the files from the filesystem path as well")
 	removeName     = removeCmd.Flag("name", "The name of the module to remove from the mdlr.yml file").Short('n').String()
@@ -46,11 +48,26 @@ func main() {
 		log.Info("Successfully initialized the mdlr.yml file!")
 		log.Exit(0)
 	case "list":
-		// todo
+		out, err := c.List()
+		if err != nil {
+			log.WithError(err).Fatal("Unable to list the modules from the mdlr.yml file")
+		}
+		log.Info(out)
+		log.Exit(0)
 	case "add":
-		// todo
+		err = c.Add(*addName, *addType, *addPath, *addUrl, *addBranch, *addCommit)
+		if err != nil {
+			log.WithError(err).Fatal("Unable to add module to the mdlr.yml file")
+		}
+		log.Info("Successfully added module to the mdlr.yml file")
+		log.Exit(0)
 	case "remove":
-		// todo
+		err = c.Remove(*removeName, *removeFiles)
+		if err != nil {
+			log.WithError(err).Fatal("Unable to remove module from the mdlr.yml file")
+		}
+		log.Info("Successfully removed module from the mdlr.yml file")
+		log.Exit(0)
 	case "import":
 		// todo
 	case "update":

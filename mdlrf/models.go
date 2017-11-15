@@ -1,9 +1,11 @@
 package mdlrf
 
 import (
+	"github.com/exlinc/mdlr/vcs"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 )
 
 var mdlrFileHeader = []byte(`# Welcome to mdlr.yml
@@ -13,8 +15,10 @@ var mdlrFileHeader = []byte(`# Welcome to mdlr.yml
 `)
 
 type MdlrFile struct {
-	Syntax  int64              `yaml:"syntax"`
-	Modules map[string]*Module `yaml:"modules,flow"`
+	ParentDirectory  string             `yaml:"-"`
+	AbsoluteFilePath string             `yaml:"-"`
+	Syntax           int64              `yaml:"syntax"`
+	Modules          map[string]*Module `yaml:"modules,flow"`
 }
 
 func NewMdlrFile() *MdlrFile {
@@ -25,36 +29,64 @@ func NewMdlrFile() *MdlrFile {
 }
 
 type Module struct {
-	Name   string `yaml:"-"` // This is the key used for the module -- populated outside of the YAML object
-	Type   string `yaml:"type"`
-	Path   string `yaml:"path"`
-	URL    string `yaml:"url"`
-	Branch string `yaml:"branch"`
-	Commit string `yaml:"commit"`
+	Name         string `yaml:"-"` // This is the key used for the module -- populated outside of the YAML object
+	Type         string `yaml:"type"`
+	Path         string `yaml:"path"`
+	AbsolutePath string `yaml:"-"`
+	URL          string `yaml:"url"`
+	Branch       string `yaml:"branch"`
+	Commit       string `yaml:"commit"`
+	vcs.Context  `yaml:"-"`
 }
 
 func (mod *Module) Validate() error {
-	if mod.Name == "" || mod.Type == "" || mod.Path == "" || mod.URL == "" || mod.Branch == "" || mod.Commit == "" {
+	if mod.Name == "" || mod.Type == "" || mod.Path == "" || mod.URL == "" || mod.AbsolutePath == "" {
 		return ErrInvalidModuleDefinition
 	}
-	if mod.Type != "git" && mod.Type != "hg" {
+	if !vcs.Supported(mod.Type) {
 		return ErrInvalidModuleType
+	}
+	var err error
+	// TODO: set verbose
+	mod.Context, err = vcs.Load(true, mod.Type, mod.AbsolutePath)
+	if err != nil {
+		return err
 	}
 	return nil
 }
 
-func (mf *MdlrFile) Exists(filename string) bool {
-	if _, err := os.Stat(filename); os.IsNotExist(err) {
+func (mod *Module) Prepare(name string, parentDir string) {
+	// TODO - fill defaults
+	mod.Name = name
+	// Default to git
+	if mod.Type == "" {
+		mod.Type = "git"
+	}
+	mod.AbsolutePath = mod.Path
+	if !filepath.IsAbs(mod.AbsolutePath) {
+		mod.AbsolutePath = filepath.Join(parentDir, mod.AbsolutePath)
+	}
+}
+
+func (mf *MdlrFile) Exists(absFilePath string) bool {
+	if _, err := os.Stat(absFilePath); os.IsNotExist(err) {
 		return false
 	}
 	return true
 }
 
-func (mf *MdlrFile) Load(filename string) error {
-	if !mf.Exists(filename) {
+func (mf *MdlrFile) Load(absFilePath string) error {
+	if !mf.Exists(absFilePath) {
 		return ErrMdlrFileNotExist
 	}
-	raw, err := ioutil.ReadFile(filename)
+	var err error
+	if !filepath.IsAbs(absFilePath) {
+		absFilePath, err = filepath.Abs(absFilePath)
+		if err != nil {
+			return err
+		}
+	}
+	raw, err := ioutil.ReadFile(absFilePath)
 	if err != nil {
 		return err
 	}
@@ -62,11 +94,13 @@ func (mf *MdlrFile) Load(filename string) error {
 	if err != nil {
 		return err
 	}
-	mf.Prepare()
+	mf.Prepare(absFilePath)
 	return nil
 }
 
-func (mf *MdlrFile) Prepare() {
+func (mf *MdlrFile) Prepare(absFilePath string) {
+	mf.AbsoluteFilePath = absFilePath
+	mf.ParentDirectory = filepath.Dir(mf.AbsoluteFilePath)
 	if mf.Syntax == 0 {
 		mf.Syntax = 1
 	}
@@ -74,27 +108,17 @@ func (mf *MdlrFile) Prepare() {
 		mf.Modules = make(map[string]*Module)
 	}
 	for k, v := range mf.Modules {
-		v.Name = k
-		// Add some sensible defaults for the optional fields
-		if v.Branch == "" {
-			v.Branch = "master"
-		}
-		if v.Commit == "" {
-			v.Commit = "HEAD"
-		}
-		if v.Type == "" {
-			v.Type = "git"
-		}
+		v.Prepare(k, mf.ParentDirectory)
 		mf.Modules[k] = v
 	}
 }
 
-func (mf *MdlrFile) Persist(filename string) error {
+func (mf *MdlrFile) Persist() error {
 	out, err := yaml.Marshal(mf)
 	if err != nil {
 		return err
 	}
-	return ioutil.WriteFile(filename, append(mdlrFileHeader, out...), 0644)
+	return ioutil.WriteFile(mf.AbsoluteFilePath, append(mdlrFileHeader, out...), 0644)
 }
 
 func (mf *MdlrFile) Validate() error {

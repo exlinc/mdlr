@@ -1,6 +1,0 @@
-# Welcome to mdlr.yml
-# Use the mdlr CLI to edit and explore this file
-# WARNING: The mdlr CLI does not preserve comments!
-
-syntax: 1
-modules: {}
