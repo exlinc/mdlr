@@ -48,3 +48,4 @@ nohup.out
 *.csv
 *.zip
 mdlr.yml
+/build/
