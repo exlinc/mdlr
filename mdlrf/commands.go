@@ -106,7 +106,7 @@ func (ctx *MdlrCtx) Remove(name string, dropFiles bool) error {
 	if dropFiles {
 		return os.RemoveAll(dirPath)
 	}
-	return nil
+	return ctx.MdlrFile.Persist()
 }
 
 func (ctx *MdlrCtx) Import(specificName string, force bool) error {
