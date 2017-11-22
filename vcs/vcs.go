@@ -26,7 +26,7 @@ func Load(verbose bool, vcsType string, root string, url string) (Context, error
 
 type Context interface {
 	Import(branch, commit string) error
-	Update() error
+	Update(branch, commit string) error
 	Status(short bool) string
 	Invokable() (bool, error)
 }
