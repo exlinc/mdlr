@@ -55,17 +55,36 @@ func (ctx *GitVCSCtx) Import(branch, commit string) error {
 	return nil
 }
 
-func (ctx *GitVCSCtx) Update(branch, commit string) error {
-	// TODO
+func (ctx *GitVCSCtx) Update(branch, commit string) (string, error) {
 	if !ctx.rootExists() {
-		return ErrRootNotExist
+		return "", ErrRootNotExist
 	}
+	if _, err := ctx.runCmdInRoot("checkout", branch); err != nil {
+		return "", err
+	}
+	if _, err := ctx.runCmdInRoot("pull", "origin", branch); err != nil {
+		return "", err
+	}
+	if _, err := ctx.runCmdInRoot("checkout", commit); err != nil {
+		return "", err
+	}
+	return ctx.getCurrentShortCommitHash()
+}
 
-	return nil
+func (ctx *GitVCSCtx) getCurrentShortCommitHash() (string, error) {
+	if out, err := ctx.runCmdInRoot("show", "--oneline", "-s"); err != nil {
+		return "", err
+	} else {
+		sep := strings.Split(out, " ")
+		if len(sep) > 0 {
+			return sep[0], nil
+		} else {
+			return "", ErrInvalidResponseFromGit
+		}
+	}
 }
 
 func (ctx *GitVCSCtx) Status(short bool) string {
-	// TODO - get branch, commit, modified files, etc.
 	switch short {
 	case true:
 		if !ctx.rootExists() {

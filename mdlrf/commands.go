@@ -104,13 +104,15 @@ func (ctx *MdlrCtx) Remove(name string, dropFiles bool) error {
 	dirPath := ctx.MdlrFile.Modules[name].AbsolutePath
 	delete(ctx.MdlrFile.Modules, name)
 	if dropFiles {
-		return os.RemoveAll(dirPath)
+		err := os.RemoveAll(dirPath)
+		if err != nil {
+			return err
+		}
 	}
 	return ctx.MdlrFile.Persist()
 }
 
 func (ctx *MdlrCtx) Import(specificName string, force bool) error {
-	// TODO
 	err := ctx.loadFile()
 	if err != nil {
 		return err
@@ -129,7 +131,10 @@ func (ctx *MdlrCtx) Import(specificName string, force bool) error {
 		return ctx.MdlrFile.Modules[name].Import(ctx.MdlrFile.Modules[name].Branch, ctx.MdlrFile.Modules[name].Commit)
 	}
 	if specificName != "" {
-		return runForRepo(specificName)
+		err := runForRepo(specificName)
+		if err != nil {
+			return err
+		}
 	} else {
 		for _, m := range ctx.MdlrFile.Modules {
 			if err := runForRepo(m.Name); err != nil {
@@ -137,28 +142,60 @@ func (ctx *MdlrCtx) Import(specificName string, force bool) error {
 			}
 		}
 	}
-	return nil
+	return ctx.MdlrFile.Persist()
 }
 
-func (ctx *MdlrCtx) Update(specificName string, force bool) error {
-	// TODO
-	err := ctx.loadFile()
-	if err != nil {
-		return err
+func (ctx *MdlrCtx) Update(specificName, branch, commit string, force bool) error {
+	if commit == "" {
+		commit = "HEAD"
 	}
-	if len(ctx.MdlrFile.Modules) == 0 {
-		return ErrNoModules
+	var err error
+	if force {
+		err = ctx.Import(specificName, force)
+		if err != nil {
+			return err
+		}
+	} else {
+		err = ctx.loadFile()
+		if err != nil {
+			return err
+		}
+		if len(ctx.MdlrFile.Modules) == 0 {
+			return ErrNoModules
+		}
 	}
-	switch specificName {
-	case "":
-		// TODO
-	default:
+	var runForRepo = func(name string) error {
 		if _, exist := ctx.MdlrFile.Modules[specificName]; !exist {
 			return ErrModuleNameNotExist
 		}
-		// TODO
+		b := branch
+		if b == "" {
+			b = ctx.MdlrFile.Modules[name].Branch
+		}
+		c, err := ctx.MdlrFile.Modules[name].Update(b, commit)
+		if err != nil {
+			return err
+		}
+		Log.Println("COMMIT:", c)
+		ctx.MdlrFile.Modules[name].Branch = b
+		if ctx.MdlrFile.Modules[name].Commit != "HEAD" {
+			ctx.MdlrFile.Modules[name].Commit = c
+		}
+		return nil
 	}
-	return nil
+	if specificName != "" {
+		err := runForRepo(specificName)
+		if err != nil {
+			return err
+		}
+	} else {
+		for _, m := range ctx.MdlrFile.Modules {
+			if err := runForRepo(m.Name); err != nil {
+				return err
+			}
+		}
+	}
+	return ctx.MdlrFile.Persist()
 }
 
 func (ctx *MdlrCtx) Status(name string) (string, error) {

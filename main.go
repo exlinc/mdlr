@@ -9,7 +9,6 @@ import (
 var Log = config.Cfg().GetLogger()
 
 // TODO: Add 'commit' command that would commit the branch/commit of the module to mdlr.yml
-// TODO: Add command to delete/reset/revert the module
 var (
 	initCmd        = kingpin.Command("init", "Create a template mdlr.yml file in the directory")
 	listCmd        = kingpin.Command("list", "List the current modules from the mdlr.yml file in the directory")
@@ -27,7 +26,9 @@ var (
 	importForce    = importCmd.Flag("force", "Force the import -- this will completely reset the path of the module and pull from the internet").Short('f').Bool()
 	importSpecific = importCmd.Flag("specific", "Specify the name of the module to import").Short('s').String()
 	updateCmd      = kingpin.Command("update", "Update the mdlr.yml modules. Use the --specific flag to specify a single module by name")
-	updateForce    = updateCmd.Flag("force", "Wipe database and reset tables first").Short('f').Bool()
+	updateForce    = updateCmd.Flag("force", "Force the update -- this will completely reset the path of the module and pull from the internet").Short('f').Bool()
+	updateBranch   = updateCmd.Flag("branch", "The branch to use, defaults to the branch set in the mdlr.yml file").Short('b').String()
+	updateCommit   = updateCmd.Flag("commit", "The commit to pull, defaults to the latest available").Short('c').String()
 	updateSpecific = updateCmd.Flag("specific", "Specify the name of the module to update").Short('s').String()
 	statusCmd      = kingpin.Command("status", "Get the detailed status of the mdlr.yml module")
 	statusName     = statusCmd.Flag("name", "Specify the name of the module to get the status of").Short('n').Required().String()
@@ -73,7 +74,7 @@ func main() {
 		}
 		Log.Info("Successfully imported module(s) from the mdlr.yml file")
 	case "update":
-		err = c.Update(*updateSpecific, *updateForce)
+		err = c.Update(*updateSpecific, *updateBranch, *updateCommit, *updateForce)
 		if err != nil {
 			Log.WithError(err).Fatal("Unable to update module(s) from the mdlr.yml file")
 		}
