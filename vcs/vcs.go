@@ -1,5 +1,9 @@
 package vcs
 
+import "git.exlhub.io/exlinc/tools-mdlr/config"
+
+var Log = config.Cfg().GetLogger()
+
 type vcsLoadFunc func(verbose bool, root string) (Context, error)
 
 var vcsLoaders = map[string]vcsLoadFunc{

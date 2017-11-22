@@ -1,10 +1,12 @@
 package main
 
 import (
-	"github.com/exlinc/mdlr/mdlrf"
-	log "github.com/sirupsen/logrus"
+	"git.exlhub.io/exlinc/tools-mdlr/config"
 	"gopkg.in/alecthomas/kingpin.v2"
+	"bitbucket.org/dev-mdlr/config"
 )
+
+var Log = config.Cfg().GetLogger()
 
 // TODO: Add 'commit' command that would commit the branch/commit of the module to mdlr.yml
 // TODO: Add command to delete/reset/revert the module
@@ -36,60 +38,60 @@ func main() {
 	kingpin.CommandLine.Help = "mdlr"
 	c, err := mdlrf.NewMdlrCtxForCmd()
 	if err != nil {
-		log.WithError(err).Fatal("Unable to get context for the command")
+		Log.WithError(err).Fatal("Unable to get context for the command")
 	}
 
 	switch kingpin.Parse() {
 	case "init":
 		err = c.Init()
 		if err != nil {
-			log.WithError(err).Fatal("Unable to initialize the mdlr.yml file")
+			Log.WithError(err).Fatal("Unable to initialize the mdlr.yml file")
 		}
-		log.Info("Successfully initialized the mdlr.yml file!")
-		log.Exit(0)
+		Log.Info("Successfully initialized the mdlr.yml file!")
+		Log.Exit(0)
 	case "list":
 		out, err := c.List()
 		if err != nil {
 			log.WithError(err).Fatal("Unable to list the modules from the mdlr.yml file")
 		}
-		log.Info(out)
-		log.Exit(0)
+		Log.Info(out)
+		Log.Exit(0)
 	case "add":
 		err = c.Add(*addName, *addType, *addPath, *addUrl, *addBranch, *addCommit)
 		if err != nil {
-			log.WithError(err).Fatal("Unable to add module to the mdlr.yml file")
+			Log.WithError(err).Fatal("Unable to add module to the mdlr.yml file")
 		}
-		log.Info("Successfully added module to the mdlr.yml file")
-		log.Exit(0)
+		Log.Info("Successfully added module to the mdlr.yml file")
+		Log.Exit(0)
 	case "remove":
 		err = c.Remove(*removeName, *removeFiles)
 		if err != nil {
-			log.WithError(err).Fatal("Unable to remove module from the mdlr.yml file")
+			Log.WithError(err).Fatal("Unable to remove module from the mdlr.yml file")
 		}
-		log.Info("Successfully removed module from the mdlr.yml file")
-		log.Exit(0)
+		Log.Info("Successfully removed module from the mdlr.yml file")
+		Log.Exit(0)
 	case "import":
 		err = c.Import(*importSpecific, *importForce)
 		if err != nil {
-			log.WithError(err).Fatal("Unable to import module(s) from the mdlr.yml file")
+			Log.WithError(err).Fatal("Unable to import module(s) from the mdlr.yml file")
 		}
-		log.Info("Successfully imported module(s) from the mdlr.yml file")
-		log.Exit(0)
+		Log.Info("Successfully imported module(s) from the mdlr.yml file")
+		Log.Exit(0)
 	case "update":
 		err = c.Update(*updateSpecific, *updateForce)
 		if err != nil {
-			log.WithError(err).Fatal("Unable to update module(s) from the mdlr.yml file")
+			Log.WithError(err).Fatal("Unable to update module(s) from the mdlr.yml file")
 		}
-		log.Info("Successfully updated module(s) from the mdlr.yml file")
-		log.Exit(0)
+		Log.Info("Successfully updated module(s) from the mdlr.yml file")
+		Log.Exit(0)
 	case "status":
 		out, err := c.Status(*statusName)
 		if err != nil {
-			log.WithError(err).Fatal("Unable to get the status of the module from the mdlr.yml file")
+			Log.WithError(err).Fatal("Unable to get the status of the module from the mdlr.yml file")
 		}
-		log.Info(out)
-		log.Exit(0)
+		Log.Info(out)
+		Log.Exit(0)
 	default:
-		log.Error("Unknown command")
+		Log.Error("Unknown command")
 	}
 }

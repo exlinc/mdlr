@@ -1,12 +1,16 @@
 package mdlrf
 
 import (
-	"github.com/exlinc/mdlr/vcs"
+	"bitbucket.org/dev-mdlr/config"
+	"git.exlhub.io/exlinc/tools-mdlr/config"
+	"git.exlhub.io/exlinc/tools-mdlr/vcs"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 )
+
+var Log = config.Cfg().GetLogger()
 
 var mdlrFileHeader = []byte(`# Welcome to mdlr.yml
 # Use the mdlr CLI to edit and explore this file

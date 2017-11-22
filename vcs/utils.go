@@ -3,7 +3,6 @@ package vcs
 import (
 	"bytes"
 	"fmt"
-	log "github.com/sirupsen/logrus"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -22,7 +21,7 @@ func runCmd(verbose bool, wDir string, cmdName string, args ...string) (string, 
 	cmd := exec.Command(cmdName, args...)
 	cmd.Dir = wDir
 	if verbose {
-		log.Info("cd %s\n", wDir)
+		Log.Info("cd %s\n", wDir)
 		fmt.Printf("%s %s\n", cmdName, strings.Join(args, " "))
 	}
 	var buf bytes.Buffer
