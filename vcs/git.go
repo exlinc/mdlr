@@ -9,10 +9,11 @@ import (
 type GitVCSCtx struct {
 	ParentDir string
 	Root      string
+	URL       string
 	Verbose   bool
 }
 
-func setupGitVCSCtx(verbose bool, root string) (Context, error) {
+func setupGitVCSCtx(verbose bool, root string, url string) (Context, error) {
 	if !cmdExists("git") {
 		return nil, ErrGitNotAvailable
 	}
@@ -20,6 +21,7 @@ func setupGitVCSCtx(verbose bool, root string) (Context, error) {
 		ParentDir: filepath.Dir(root),
 		Root:      root,
 		Verbose:   verbose,
+		URL:       url,
 	}
 	return ctx, nil
 }
@@ -39,8 +41,18 @@ func (ctx *GitVCSCtx) rootExists() bool {
 	return true
 }
 
-func (ctx *GitVCSCtx) Import() error {
+func (ctx *GitVCSCtx) Import(branch, commit string) error {
 	// TODO
+	if ctx.rootExists() {
+		return ErrRootAlreadyExists
+	}
+	_, fn := filepath.Split(ctx.Root)
+	if _, err := ctx.runCmdInParent("clone", "-b", branch, ctx.URL, fn); err != nil {
+		return err
+	}
+	if _, err := ctx.runCmdInRoot("checkout", commit); err != nil {
+		return err
+	}
 	return nil
 }
 

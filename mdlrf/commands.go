@@ -118,14 +118,24 @@ func (ctx *MdlrCtx) Import(specificName string, force bool) error {
 	if len(ctx.MdlrFile.Modules) == 0 {
 		return ErrNoModules
 	}
-	switch specificName {
-	case "":
-		// TODO
-	default:
+	var runForRepo = func(name string) error {
 		if _, exist := ctx.MdlrFile.Modules[specificName]; !exist {
 			return ErrModuleNameNotExist
 		}
-		// TODO
+		if force {
+			dirPath := ctx.MdlrFile.Modules[name].AbsolutePath
+			os.RemoveAll(dirPath)
+		}
+		return ctx.MdlrFile.Modules[name].Import(ctx.MdlrFile.Modules[name].Branch, ctx.MdlrFile.Modules[name].Commit)
+	}
+	if specificName != "" {
+		return runForRepo(specificName)
+	} else {
+		for _, m := range ctx.MdlrFile.Modules {
+			if err := runForRepo(m.Name); err != nil {
+				return err
+			}
+		}
 	}
 	return nil
 }

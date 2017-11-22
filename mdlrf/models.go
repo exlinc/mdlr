@@ -51,7 +51,7 @@ func (mod *Module) Validate() error {
 	}
 	var err error
 	// TODO: set verbose
-	mod.Context, err = vcs.Load(true, mod.Type, mod.AbsolutePath)
+	mod.Context, err = vcs.Load(true, mod.Type, mod.AbsolutePath, mod.URL)
 	if err != nil {
 		return err
 	}

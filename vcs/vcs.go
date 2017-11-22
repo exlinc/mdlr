@@ -4,7 +4,7 @@ import "git.exlhub.io/exlinc/tools-mdlr/config"
 
 var Log = config.Cfg().GetLogger()
 
-type vcsLoadFunc func(verbose bool, root string) (Context, error)
+type vcsLoadFunc func(verbose bool, root string, url string) (Context, error)
 
 var vcsLoaders = map[string]vcsLoadFunc{
 	"git": setupGitVCSCtx,
@@ -17,15 +17,15 @@ func Supported(vcsType string) bool {
 	return exist
 }
 
-func Load(verbose bool, vcsType string, root string) (Context, error) {
+func Load(verbose bool, vcsType string, root string, url string) (Context, error) {
 	if !Supported(vcsType) {
 		return nil, ErrInvalidVCSType
 	}
-	return vcsLoaders[vcsType](verbose, root)
+	return vcsLoaders[vcsType](verbose, root, url)
 }
 
 type Context interface {
-	Import() error
+	Import(branch, commit string) error
 	Update() error
 	Status(short bool) string
 	Invokable() (bool, error)
