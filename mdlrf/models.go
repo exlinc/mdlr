@@ -1,7 +1,6 @@
 package mdlrf
 
 import (
-	"bitbucket.org/dev-mdlr/config"
 	"git.exlhub.io/exlinc/tools-mdlr/config"
 	"git.exlhub.io/exlinc/tools-mdlr/vcs"
 	"gopkg.in/yaml.v2"

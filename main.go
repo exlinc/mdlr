@@ -2,8 +2,8 @@ package main
 
 import (
 	"git.exlhub.io/exlinc/tools-mdlr/config"
+	"git.exlhub.io/exlinc/tools-mdlr/mdlrf"
 	"gopkg.in/alecthomas/kingpin.v2"
-	"bitbucket.org/dev-mdlr/config"
 )
 
 var Log = config.Cfg().GetLogger()
@@ -48,49 +48,42 @@ func main() {
 			Log.WithError(err).Fatal("Unable to initialize the mdlr.yml file")
 		}
 		Log.Info("Successfully initialized the mdlr.yml file!")
-		Log.Exit(0)
 	case "list":
 		out, err := c.List()
 		if err != nil {
-			log.WithError(err).Fatal("Unable to list the modules from the mdlr.yml file")
+			Log.WithError(err).Fatal("Unable to list the modules from the mdlr.yml file")
 		}
 		Log.Info(out)
-		Log.Exit(0)
 	case "add":
 		err = c.Add(*addName, *addType, *addPath, *addUrl, *addBranch, *addCommit)
 		if err != nil {
 			Log.WithError(err).Fatal("Unable to add module to the mdlr.yml file")
 		}
 		Log.Info("Successfully added module to the mdlr.yml file")
-		Log.Exit(0)
 	case "remove":
 		err = c.Remove(*removeName, *removeFiles)
 		if err != nil {
 			Log.WithError(err).Fatal("Unable to remove module from the mdlr.yml file")
 		}
 		Log.Info("Successfully removed module from the mdlr.yml file")
-		Log.Exit(0)
 	case "import":
 		err = c.Import(*importSpecific, *importForce)
 		if err != nil {
 			Log.WithError(err).Fatal("Unable to import module(s) from the mdlr.yml file")
 		}
 		Log.Info("Successfully imported module(s) from the mdlr.yml file")
-		Log.Exit(0)
 	case "update":
 		err = c.Update(*updateSpecific, *updateForce)
 		if err != nil {
 			Log.WithError(err).Fatal("Unable to update module(s) from the mdlr.yml file")
 		}
 		Log.Info("Successfully updated module(s) from the mdlr.yml file")
-		Log.Exit(0)
 	case "status":
 		out, err := c.Status(*statusName)
 		if err != nil {
 			Log.WithError(err).Fatal("Unable to get the status of the module from the mdlr.yml file")
 		}
 		Log.Info(out)
-		Log.Exit(0)
 	default:
 		Log.Error("Unknown command")
 	}
