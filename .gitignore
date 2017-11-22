@@ -41,6 +41,7 @@ _testmain.go
 *.test
 *.prof
 
+tools-mdlr
 mdlr
 nohup.out
 .DS_Store
