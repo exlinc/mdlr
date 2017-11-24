@@ -57,11 +57,11 @@ func (ctx *MdlrCtx) List() (string, error) {
 	}
 	items := make([]string, 0, len(ctx.MdlrFile.Modules))
 	for _, m := range ctx.MdlrFile.Modules {
-		items = append(items, fmt.Sprintf("[%s] %s -> %s (%s) hosted at %s on branch %s at %s", m.Status(true), m.Path, m.Name, m.Type, m.URL, m.Branch, m.Commit))
+		items = append(items, fmt.Sprintf("%s:%s (%s) %s@%s(%s) [current=%s]", m.Name, m.Path, m.Type, m.URL, m.Branch, m.Commit, m.Status(true)))
 	}
-	out := fmt.Sprintf("Modules count: %d", len(items))
-	for _, val := range items {
-		out += fmt.Sprintf("\n\t%s", val)
+	out := fmt.Sprintf("Modules: %d", len(items))
+	for n, val := range items {
+		out += fmt.Sprintf("\n%d. %s", n+1, val)
 	}
 	return out, nil
 }
