@@ -48,7 +48,6 @@ func (ctx *MdlrCtx) Init() error {
 }
 
 func (ctx *MdlrCtx) List() (string, error) {
-	// TODO
 	err := ctx.loadFile()
 	if err != nil {
 		return "", err
