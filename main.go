@@ -31,7 +31,7 @@ var (
 	updateCommit   = updateCmd.Flag("commit", "The commit to pull, defaults to the latest available").Short('c').String()
 	updateSpecific = updateCmd.Flag("specific", "Specify the name of the module to update").Short('s').String()
 	statusCmd      = kingpin.Command("status", "Get the detailed status of the mdlr.yml module")
-	statusName     = statusCmd.Flag("name", "Specify the name of the module to get the status of").Short('n').Required().String()
+	statusName     = statusCmd.Flag("name", "Specify the name of the module to get the status of").Short('n').String()
 )
 
 func main() {
@@ -80,11 +80,19 @@ func main() {
 		}
 		Log.Info("Successfully updated module(s) from the mdlr.yml file")
 	case "status":
-		out, err := c.Status(*statusName)
-		if err != nil {
-			Log.WithError(err).Fatal("Unable to get the status of the module from the mdlr.yml file")
+		if *statusName == "" {
+			out, err := c.List()
+			if err != nil {
+				Log.WithError(err).Fatal("Unable to get the statuses of the modules from the mdlr.yml file")
+			}
+			Log.Info(out)
+		} else {
+			out, err := c.Status(*statusName)
+			if err != nil {
+				Log.WithError(err).Fatal("Unable to get the status of the module from the mdlr.yml file")
+			}
+			Log.Info(out)
 		}
-		Log.Info(out)
 	default:
 		Log.Error("Unknown command")
 	}
