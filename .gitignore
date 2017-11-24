@@ -49,3 +49,4 @@ nohup.out
 *.zip
 mdlr.yml
 /build/
+/vendor/
