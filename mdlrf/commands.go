@@ -165,7 +165,7 @@ func (ctx *MdlrCtx) Update(specificName, branch, commit string, force bool) erro
 		}
 	}
 	var runForRepo = func(name string) error {
-		if _, exist := ctx.MdlrFile.Modules[specificName]; !exist {
+		if _, exist := ctx.MdlrFile.Modules[name]; !exist {
 			return ErrModuleNameNotExist
 		}
 		b := branch
