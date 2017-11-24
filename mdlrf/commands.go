@@ -121,7 +121,7 @@ func (ctx *MdlrCtx) Import(specificName string, force bool) error {
 		return ErrNoModules
 	}
 	var runForRepo = func(name string) error {
-		if _, exist := ctx.MdlrFile.Modules[specificName]; !exist {
+		if _, exist := ctx.MdlrFile.Modules[name]; !exist {
 			return ErrModuleNameNotExist
 		}
 		if force {
