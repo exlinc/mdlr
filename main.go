@@ -8,7 +8,6 @@ import (
 
 var Log = config.Cfg().GetLogger()
 
-// TODO: Add 'commit' command that would commit the branch/commit of the module to mdlr.yml
 var (
 	initCmd        = kingpin.Command("init", "Create a template mdlr.yml file in the directory")
 	listCmd        = kingpin.Command("list", "List the current modules from the mdlr.yml file in the directory")
