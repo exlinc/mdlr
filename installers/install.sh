@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 cd /usr/local/bin
-URL='https://git.exlhub.io/exlinc/tools-mdlr/releases/todo/'
+URL='https://git.exlhub.io/exlinc/tools-mdlr/releases/TAG/files/'
 MACHINE_TYPE=`uname -m`
 ARCH='386'
 OS='linux'
@@ -12,5 +12,5 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     OS='darwin'
 fi
 echo "Downloading mdlr"
-curl -o mdlr ${URL}${OS}-${ARCH}-bin
+curl -o mdlr ${URL}${OS}-${ARCH}-mdlr
 echo "Installed"
