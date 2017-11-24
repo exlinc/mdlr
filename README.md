@@ -1,3 +1,3 @@
 # Mdlr Tool for Git Dependencies
 
-TODO - docs
+For docs and getting started check out the Wiki [here.](https://git.exlhub.io/exlinc/tools-mdlr/wiki/Getting-Started)
