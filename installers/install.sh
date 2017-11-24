@@ -30,3 +30,8 @@ sudo echo "Successfully elevated permissions to install binary"
 echo "Installing binary ..."
 sudo cp ${OS}-${ARCH}-mdlr ${INSTALL_ROOT}mdlr
 echo "Successfully installed binary"
+
+echo "Removing temp directories ..."
+cd ../..
+rm -rf .mdlr-install
+echo "Removed temp directories"
