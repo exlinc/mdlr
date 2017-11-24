@@ -1,7 +1,17 @@
 #!/usr/bin/env bash
-sudo echo "Elevated permissions to install binary"
-cd /usr/local/bin
-URL='https://git.exlhub.io/exlinc/tools-mdlr/releases/TAG/files/'
+echo "Downloading binaries ..."
+CLONE_URL='https://git.exlhub.io/exlinc/tools-mdlr-dist'
+BRANCH='master'
+COMMIT='HEAD'
+mkdir .mdlr-install
+cd  .mdlr-install
+git clone -b ${BRANCH} ${CLONE_URL} mdist
+cd mdist
+git checkout -b ${BRANCH} ${COMMIT}
+echo "Successfully downloaded binaries"
+
+echo "Selecting binary for this system ..."
+INSTALL_ROOT='/usr/local/bin/'
 MACHINE_TYPE=`uname -m`
 ARCH='386'
 OS='linux'
@@ -12,10 +22,11 @@ fi
 if [[ "$OSTYPE" == "darwin"* ]]; then
     OS='darwin'
 fi
-echo "Downloading mdlr"
-sudo curl -o mdlr ${URL}${OS}-${ARCH}-mdlr.tar.gz
-echo "Downloaded, unpacking ..."
-sudo tar -xzvf ${OS}-${ARCH}-mdlr.tar.gz
-sudo rm ${OS}-${ARCH}-mdlr.tar.gz
-sudo mv ${OS}-${ARCH}-mdlr ./mdlr
-echo "Installed"
+echo "Successfully selected binary for this system"
+
+echo "Preparing to install binary by elevating permissions ..."
+sudo echo "Successfully elevated permissions to install binary"
+
+echo "Installing binary ..."
+sudo cp ${OS}-${ARCH}-mdlr ${INSTALL_ROOT}mdlr
+echo "Successfully installed binary"

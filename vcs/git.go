@@ -49,7 +49,7 @@ func (ctx *GitVCSCtx) Import(branch, commit string) error {
 	if _, err := ctx.runCmdInParent("clone", "-b", branch, ctx.URL, fn); err != nil {
 		return err
 	}
-	if _, err := ctx.runCmdInRoot("checkout", commit); err != nil {
+	if _, err := ctx.runCmdInRoot("checkout", "-b", branch, commit); err != nil {
 		return err
 	}
 	return nil
@@ -59,13 +59,13 @@ func (ctx *GitVCSCtx) Update(branch, commit string) (string, error) {
 	if !ctx.rootExists() {
 		return "", ErrRootNotExist
 	}
-	if _, err := ctx.runCmdInRoot("checkout", branch); err != nil {
+	if _, err := ctx.runCmdInRoot("checkout", "-b", branch, commit); err != nil {
 		return "", err
 	}
 	if _, err := ctx.runCmdInRoot("pull", "origin", branch); err != nil {
 		return "", err
 	}
-	if _, err := ctx.runCmdInRoot("checkout", commit); err != nil {
+	if _, err := ctx.runCmdInRoot("checkout", "-b", branch, commit); err != nil {
 		return "", err
 	}
 	return ctx.getCurrentShortCommitHash()
