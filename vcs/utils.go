@@ -2,7 +2,7 @@ package vcs
 
 import (
 	"bytes"
-	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -17,28 +17,43 @@ func cmdExists(cmdName string) bool {
 	return true
 }
 
+type bufferMux struct {
+	fwd  bool
+	buf  bytes.Buffer
+	dest io.Writer
+}
+
+func (mux *bufferMux) Write(p []byte) (n int, err error) {
+	n, err = mux.buf.Write(p)
+	if err != nil || !mux.fwd {
+		return
+	}
+	return mux.dest.Write(p)
+}
+
+func (mux *bufferMux) Bytes() []byte {
+	return mux.buf.Bytes()
+}
+
 func runCmd(verbose bool, wDir string, cmdName string, args ...string) (string, error) {
 	cmd := exec.Command(cmdName, args...)
 	cmd.Dir = wDir
 	if verbose {
-		Log.Info("cd %s\n", wDir)
-		fmt.Printf("%s %s\n", cmdName, strings.Join(args, " "))
+		Log.Infof("cd %s", wDir)
+		Log.Infof("%s %s", cmdName, strings.Join(args, " "))
 	}
-	var buf bytes.Buffer
+	cmd.Stdin = os.Stdin
+	buf := bufferMux{fwd: verbose, buf: bytes.Buffer{}, dest: os.Stdout}
 	cmd.Stdout = &buf
 	cmd.Stderr = &buf
 	err := cmd.Run()
 	out := buf.Bytes()
 	if err != nil {
 		if verbose {
-			fmt.Fprintf(os.Stderr, "# cd %s; %s %s\n", wDir, cmdName, strings.Join(args, " "))
-			os.Stderr.Write(out)
+			Log.Errorf("# cd %s; %s %s", wDir, cmdName, strings.Join(args, " "))
+			Log.Error(out)
 		}
 		return "", err
-	}
-	if verbose {
-		fmt.Fprintf(os.Stdout, "# cd %s; %s %s\n", wDir, cmdName, strings.Join(args, " "))
-		os.Stdout.Write(out)
 	}
 	return string(out), nil
 }
