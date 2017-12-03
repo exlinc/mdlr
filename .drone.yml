@@ -1,5 +1,5 @@
 workspace:
-  base: /gopkg
+  base: /go
   path: src/git.exlhub.io/exlinc/tools-mdlr
 
 pipeline:
