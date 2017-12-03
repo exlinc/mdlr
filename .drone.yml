@@ -1,5 +1,5 @@
 workspace:
-  base: /go
+  base: /gopkg
   path: src/git.exlhub.io/exlinc/tools-mdlr
 
 pipeline:
@@ -7,6 +7,9 @@ pipeline:
     image: golang:1.9.2
     commands:
       - pwd
+      - echo $GOPATH
+      - echo $GOBIN
+      - echo $PATH
       - go get -u github.com/golang/dep/cmd/dep
       - dep ensure -v
       - go install
@@ -20,3 +23,4 @@ pipeline:
     commit: true
     path: 'build'
     commit_message: '[skip-ci] Push build'
+    branches: [master]
