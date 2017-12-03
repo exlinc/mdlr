@@ -1,0 +1,9 @@
+workspace:
+  base: /go
+  path: src/git.exlhub.io/exlinc/tools-mdlr
+
+pipeline:
+  test:
+    image: golang:1.9.2
+    commands:
+      - which dep
