@@ -1,4 +1,4 @@
-https://dci.exlhub.io/api/badges/exlinc/tools-mdlr/status.svg
+![Build Status](https://dci.exlhub.io/api/badges/exlinc/tools-mdlr/status.svg)
 
 # Mdlr Tool for Git Dependencies
 
