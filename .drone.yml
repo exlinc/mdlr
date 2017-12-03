@@ -8,4 +8,14 @@ pipeline:
     commands:
       - go get -u github.com/golang/dep/cmd/dep
       - dep ensure -v
+      - go install
+      - tools-mdlr import -f
       - ./xplatform-build.bash
+  git_push:
+    image: appleboy/drone-git-push
+    branch: master
+    remote: https://git.exlhub.io/exlinc/tools-mdlr-dist
+    force: false
+    commit: true
+    path: 'build'
+    commit_message: '[skip-ci] Push build'
