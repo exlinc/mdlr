@@ -1,0 +1,7 @@
+# Welcome to mdlr.yml
+# Use the mdlr CLI to edit and explore this file
+# WARNING: The mdlr CLI does not preserve comments!
+
+syntax: 1
+modules: {dist: {type: git, path: ./build, url: 'https://git.exlhub.io/exlinc/tools-mdlr-dist',
+    branch: master, commit: HEAD}}

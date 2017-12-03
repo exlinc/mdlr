@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-rm -rf ./build
+if [ ! -d "./build" ]; then
+  echo "Use mdlr to import the ./build directory with mdlr import"
+  exit 1
+fi
 GOOS=darwin
 GOARCH=amd64
 go build -o $(echo ./build/$GOOS-$GOARCH-mdlr)
