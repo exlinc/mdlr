@@ -3,7 +3,9 @@ workspace:
   path: src/git.exlhub.io/exlinc/tools-mdlr
 
 pipeline:
-  test:
+  build:
     image: golang:1.9.2
     commands:
-      - which dep
+      - go get -u github.com/golang/dep/cmd/dep
+      - dep ensure -v
+      - ./xplatform-build.bash
