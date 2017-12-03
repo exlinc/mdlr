@@ -17,5 +17,5 @@ pipeline:
     remote: https://git.exlhub.io/exlinc/tools-mdlr-dist
     force: false
     commit: true
-    path: build
-    commit_message: [skip-ci] Push build
+    path: 'build'
+    commit_message: '[skip-ci] Push build'
