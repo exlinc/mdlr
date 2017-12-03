@@ -7,9 +7,6 @@ pipeline:
     image: golang:1.9.2
     commands:
       - pwd
-      - echo $GOPATH
-      - echo $GOBIN
-      - echo $PATH
       - go get -u github.com/golang/dep/cmd/dep
       - dep ensure -v
       - go install
@@ -24,3 +21,7 @@ pipeline:
     path: 'build'
     commit_message: '[skip-ci] Push build'
     branches: [master]
+  post:
+    image: ubuntu:16.04
+    commands:
+      -pwd
