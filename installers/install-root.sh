@@ -27,12 +27,9 @@ echo "Downloading binary ..."
 curl ${S3_URL}/${VERSION}/${OS}-${ARCH}-mdlr -o ${OS}-${ARCH}-mdlr
 echo "Successfully downloaded binary"
 
-echo "Preparing to install binary by elevating permissions ..."
-sudo echo "Successfully elevated permissions to install binary"
-
 echo "Installing binary ..."
-sudo cp ${OS}-${ARCH}-mdlr ${INSTALL_ROOT}mdlr
-sudo chmod +x /usr/local/bin/mdlr
+cp ${OS}-${ARCH}-mdlr ${INSTALL_ROOT}mdlr
+chmod +x /usr/local/bin/mdlr
 echo "Successfully installed binary"
 
 echo "Removing temp directories ..."

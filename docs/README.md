@@ -4,7 +4,11 @@ You'll find version-controlled documentation here. To find the docs for a partic
 
 # To use the tool
 
-To install for linux or OS X, copy/paste [this bash script](../installers/install.sh) onto your system and execute it. This can also be run again for updates.
+To install for linux or OS X systems, please run `curl https://s3-us-west-2.amazonaws.com/mdlr-dist/v1/install.sh | bash`.
+
+For docker-ized installs or systems where you are in the root shell, please run `curl https://s3-us-west-2.amazonaws.com/mdlr-dist/v1/install-root.sh | bash`
+ 
+These same scripts may also be run again for updates.
 
 For info on how to use `mdlr` check out the [guide](using-mdlr.md).
 
