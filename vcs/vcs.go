@@ -1,6 +1,6 @@
 package vcs
 
-import "git.exlhub.io/exlinc/tools-mdlr/config"
+import "exlgit.com/tools/mdlr/config"
 
 var Log = config.Cfg().GetLogger()
 

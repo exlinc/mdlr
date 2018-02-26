@@ -1,6 +1,6 @@
 workspace:
   base: /go
-  path: src/git.exlhub.io/exlinc/tools-mdlr
+  path: src/exlgit.com/tools/mdlr
 
 pipeline:
   build:
@@ -14,7 +14,7 @@ pipeline:
   git_push:
     image: appleboy/drone-git-push
     branch: master
-    remote: https://git.exlhub.io/exlinc/tools-mdlr-dist
+    remote: https://exlgit.com/tools/mdlr-dist
     force: false
     commit: true
     path: 'build'

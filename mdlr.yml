@@ -3,5 +3,5 @@
 # WARNING: The mdlr CLI does not preserve comments!
 
 syntax: 1
-modules: {dist: {type: git, path: ./build, url: 'https://git.exlhub.io/exlinc/tools-mdlr-dist',
+modules: {dist: {type: git, path: ./build, url: 'git@exlgit.com:tools/mdlr-dist.git',
     branch: master, commit: HEAD}}

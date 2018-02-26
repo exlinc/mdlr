@@ -6,11 +6,11 @@
 
 ### Get the project
 
-1. `go get git.exlhub.io/exlinc/tools-mdlr`
+1. `go get exlgit.com/tools/mdlr`
 
 ### Setting up `dep`
 
-1. `cd $GOPATH/src/git.exlhub.io/exlinc/tools-mdlr`
+1. `cd $GOPATH/src/exlgit.com/tools/mdlr`
 2. `dep ensure -v # Set to verbose to track the progress as this might take a while...`
 
 ### Build the code (for dev platform)

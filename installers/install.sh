@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 echo "Downloading binaries ..."
-CLONE_URL='https://git.exlhub.io/exlinc/tools-mdlr-dist'
+CLONE_URL='https://exlgit.com/tools/mdlr-dist'
 BRANCH='master'
 COMMIT='HEAD'
 mkdir .mdlr-install
