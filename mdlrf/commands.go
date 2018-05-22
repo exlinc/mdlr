@@ -127,7 +127,7 @@ func (ctx *MdlrCtx) Import(specificName string, force bool) error {
 			dirPath := ctx.MdlrFile.Modules[name].AbsolutePath
 			os.RemoveAll(dirPath)
 		}
-		return ctx.MdlrFile.Modules[name].Import(ctx.MdlrFile.Modules[name].Branch, ctx.MdlrFile.Modules[name].Commit)
+		return ctx.MdlrFile.Modules[name].Import(ctx.MdlrFile.Modules[name].Branch, ctx.MdlrFile.Modules[name].Commit, ctx.MdlrFile.Modules[name].Depth)
 	}
 	if specificName != "" {
 		err := runForRepo(specificName)

@@ -3,6 +3,7 @@ package vcs
 import (
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 )
 
@@ -41,13 +42,19 @@ func (ctx *GitVCSCtx) rootExists() bool {
 	return true
 }
 
-func (ctx *GitVCSCtx) Import(branch, commit string) error {
+func (ctx *GitVCSCtx) Import(branch, commit string, depth int64) error {
 	if ctx.rootExists() {
 		return ErrRootAlreadyExists
 	}
 	_, fn := filepath.Split(ctx.Root)
-	if _, err := ctx.runCmdInParent("clone", "-b", branch, ctx.URL, fn); err != nil {
-		return err
+	if depth < 1 {
+		if _, err := ctx.runCmdInParent("clone", "-b", branch, ctx.URL, fn); err != nil {
+			return err
+		}
+	} else {
+		if _, err := ctx.runCmdInParent("clone", "--depth", strconv.Itoa(int(depth)), "-b", branch, ctx.URL, fn); err != nil {
+			return err
+		}
 	}
 	if _, err := ctx.runCmdInRoot("checkout", branch); err != nil {
 		return err

@@ -4,4 +4,4 @@
 
 syntax: 1
 modules: {dist: {type: git, path: ./build, url: 'git@exlgit.com:tools/mdlr-dist.git',
-    branch: master, commit: HEAD}}
+    branch: master, commit: HEAD, depth: 1}}

@@ -39,6 +39,7 @@ type Module struct {
 	URL          string `yaml:"url"`
 	Branch       string `yaml:"branch"`
 	Commit       string `yaml:"commit"`
+	Depth        int64  `yaml:"depth"`
 	vcs.Context  `yaml:"-"`
 }
 
