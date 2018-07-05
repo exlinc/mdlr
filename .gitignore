@@ -47,5 +47,4 @@ nohup.out
 .DS_Store
 *.csv
 *.zip
-/build/
-/vendor/
+vendor/

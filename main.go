@@ -1,8 +1,8 @@
 package main
 
 import (
-	"exlgit.com/tools/mdlr/config"
-	"exlgit.com/tools/mdlr/mdlrf"
+	"github.com/exlinc/mdlr/config"
+	"github.com/exlinc/mdlr/mdlrf"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 if [ ! -d "./build" ]; then
-  echo "Use mdlr to import the ./build directory with mdlr import"
+  echo "Before running, you must have/create the ./build output directory"
   exit 1
 fi
 

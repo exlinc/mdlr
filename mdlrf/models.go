@@ -1,8 +1,8 @@
 package mdlrf
 
 import (
-	"exlgit.com/tools/mdlr/config"
-	"exlgit.com/tools/mdlr/vcs"
+	"github.com/exlinc/mdlr/config"
+	"github.com/exlinc/mdlr/vcs"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
