@@ -106,6 +106,7 @@ The S3 upload is done by the maintainer (EXL Inc.) for new releases to the bucke
 
 ## Contributing
 
+Contributions are welcome and appreciated in the form of issues and pull requests in this repo!
 
 ## License
 
