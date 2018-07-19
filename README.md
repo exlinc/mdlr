@@ -10,7 +10,7 @@ Declarative and easy git 'submodules without the pain of submodules.'
 
 ### Linux / OS X
 
-To install for linux or OS X systems, please run `curl https://s3-us-west-2.amazonaws.com/mdlr-dist/v1/install.sh | bash`.
+To install for linux or OS X systems, please run `curl https://s3-us-west-2.amazonaws.com/mdlr-dist/v1/install.sh | bash`
 
 ### Dockerfile-compatible Automated Installer (assumes *nix system, root, non-interactive)
 
