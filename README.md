@@ -39,7 +39,7 @@ Please run the install script for your platform above to get the latest updates.
 1.  `cd project/directory/ # Enter the project directory`
 2.  `mdlr init`
 3.  `mdlr add --name depname --path deps/mydep --url https://github/org/mydep.git`
-4.  `mdlr import -f # Reset the module forcefully (wipe changes, if any) and then import it at the version in the mdlr.yml file. This is the recommended comand`
+4.  `mdlr import -f # Reset the module forcefully (wipe changes, if any) and then import it at the version in the mdlr.yml file. This is the recommended command`
 5.  `mdlr list # List the modules`
 6.  `mdlr status # Get the status overview`
 7.  `mdlr update -f # Reset the module forcefully (wipe changes, if any) and then update it and write the new update to the mdlr.yml file`
@@ -52,6 +52,19 @@ In the project directory, run `mdlr init`
 ### Import modules for a mdlr project
 
 In the project directory, run `mdlr import -f`
+
+
+### Update modules for a mdlr project
+
+In the project directory, run `mdlr update -f` (that's like doing git pull in each module)
+
+### Edit a module and commit it
+
+Go into the submodule directory, make modifications, and commit them.
+Then go back to the project root repository, `git status`, then `git add .` and commit that change. It will commit the latest commit from the submodule.
+
+If there are modified files in the submodule that are not committed, then it's impossible to commit it in the project root repository.
+
 
 ### Commands overview
 
