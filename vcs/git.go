@@ -48,11 +48,11 @@ func (ctx *GitVCSCtx) Import(branch, commit string, depth int64) error {
 	}
 	_, fn := filepath.Split(ctx.Root)
 	if depth < 1 {
-		if _, err := ctx.runCmdInParent("clone", "-b", branch, ctx.URL, fn); err != nil {
+		if _, err := ctx.runCmdInParent("clone", "--recurse-submodules", "-b", branch, ctx.URL, fn); err != nil {
 			return err
 		}
 	} else {
-		if _, err := ctx.runCmdInParent("clone", "--depth", strconv.Itoa(int(depth)), "-b", branch, ctx.URL, fn); err != nil {
+		if _, err := ctx.runCmdInParent("clone", "--recurse-submodules", "--depth", strconv.Itoa(int(depth)), "-b", branch, ctx.URL, fn); err != nil {
 			return err
 		}
 	}
