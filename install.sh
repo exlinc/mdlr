@@ -5,7 +5,7 @@ GH_URL='https://github.com/exlinc/mdlr/releases/download'
 VERSION='v1.0.0'
 echo "Preparing to install mdlr@$VERSION ..."
 echo "Creating temp directory ..."
-mkdir .mdlr-install
+mkdir -p .mdlr-install
 cd  .mdlr-install
 echo "Temp directory created ..."
 
