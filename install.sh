@@ -9,7 +9,6 @@ mkdir -p .mdlr-install
 cd  .mdlr-install
 echo "Temp directory created ..."
 
-
 echo "Selecting binary for this system ..."
 INSTALL_ROOT='/usr/local/bin/'
 MACHINE_TYPE=`uname -m`
